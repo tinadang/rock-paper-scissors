@@ -17,6 +17,20 @@ function getComputerChoice() {
 
 }
 
-console.log(getComputerChoice());
-console.log(getComputerChoice());
-console.log(getComputerChoice());
+
+//Prompts user to input their choice, checks validity, and returns it
+function getHumanChoice() {
+    //Create a string variable that stores the user's choice
+    let choice = prompt("Rock, paper, or scissors?").toLowerCase();
+    
+    //If user inputs a valid choice, return it
+    if (choice === "rock" || choice === "paper" || choice === "scissors") {
+        return choice;
+    } else {
+        //If user's input is invalid, prompt user to try again
+        alert("Invalid choice. Pick rock, paper, or scissors.");
+        return getHumanChoice();
+    }
+}
+
+console.log(getHumanChoice());
