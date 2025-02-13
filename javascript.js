@@ -37,5 +37,33 @@ function getHumanChoice() {
     }
 }
 
-console.log(humanScore);
-console.log(computerScore);
+//Takes players' choices as input, updates players' scores, and returns a message declaring the result of the round
+function playRound(humanChoice, computerChoice) {
+    //Create string variable to store winner
+    let result = "";
+
+    if ((humanChoice === "rock" && computerChoice === "scissors")
+        || (humanChoice === "paper" && computerChoice === "rock")
+        || (humanChoice === "scissors" && computerChoice === "paper")) {
+        //If user picks the winning choice, increment user's score and assign message to declare user as the winner
+        humanScore += 1;
+        result = `You win! ${humanChoice} beats ${computerChoice}.`;
+    } else if (humanChoice === computerChoice) {
+        //If user and computer picked the same choice, declare a tie
+        result = "It's a tie!";
+    } else {
+        //Computer wins if user does not - increment user's score, and assign message to declare user as the loser
+        computerScore += 1;
+        result = `You lose! ${computerChoice} beats ${humanChoice}.`;
+    }
+
+    return result;
+}
+
+const humanSelection = getHumanChoice();
+const computerSelection = getComputerChoice();
+
+console.log(`Your Choice: ${humanSelection}`);
+console.log(`Computer's Choice: ${computerSelection}`);
+
+console.log(playRound(humanSelection, computerSelection));
