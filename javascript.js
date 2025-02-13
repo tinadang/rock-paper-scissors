@@ -1,3 +1,7 @@
+//Global variables
+let humanScore = 0;
+let computerScore = 0;
+
 
 //Randomly return one of the following string values: “rock”, “paper” or “scissors”.
 function getComputerChoice() {
@@ -22,15 +26,16 @@ function getComputerChoice() {
 function getHumanChoice() {
     //Create a string variable that stores the user's choice
     let choice = prompt("Rock, paper, or scissors?").toLowerCase();
-    
+
     //If user inputs a valid choice, return it
     if (choice === "rock" || choice === "paper" || choice === "scissors") {
         return choice;
     } else {
-        //If user's input is invalid, prompt user to try again
+        //If user's input is invalid, ask user to try again
         alert("Invalid choice. Pick rock, paper, or scissors.");
         return getHumanChoice();
     }
 }
 
-console.log(getHumanChoice());
+console.log(humanScore);
+console.log(computerScore);
