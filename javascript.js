@@ -94,11 +94,11 @@ function playGame() {
     }
 
     //Create a string variable to store the result of the overall game
-    let result = "Game over. "
+    let result = `You: ${humanScore} | Computer: ${computerScore} || Game over. `
 
     //Store the appropriate string for the result
     if (humanScore > computerScore) {
-        result += "You won!";
+        result += `You won!`;
     } else if (humanScore < computerScore) {
         result += "You lost!";
     } else if (humanScore == computerScore) {
