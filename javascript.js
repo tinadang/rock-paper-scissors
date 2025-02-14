@@ -1,7 +1,3 @@
-//Global variables
-let humanScore = 0;
-let computerScore = 0;
-
 
 //Randomly return one of the following string values: “rock”, “paper” or “scissors”.
 function getComputerChoice() {
@@ -10,25 +6,24 @@ function getComputerChoice() {
 
     if (randomNumber <= 0.33) {
         //If the random number is less than or equal to 0.33, choose rock
-        return "rock";
+        return "ROCK";
     } else if (randomNumber > 0.33 && randomNumber < 0.66) {
         //If the random number is between 0.33 and 0.66, choose paper
-        return "paper";
+        return "PAPER";
     } else if (randomNumber >= 0.66) {
         //If the random number is greater than or equal to 0.66, choose scissors
-        return "scissors";
+        return "SCISSORS";
     }
 
 }
 
-
 //Prompts user to input their choice, checks validity, and returns it
 function getHumanChoice() {
     //Create a string variable that stores the user's choice
-    let choice = prompt("Rock, paper, or scissors?").toLowerCase();
+    let choice = prompt("Rock, paper, or scissors?").toUpperCase();
 
     //If user inputs a valid choice, return it
-    if (choice === "rock" || choice === "paper" || choice === "scissors") {
+    if (choice === "ROCK" || choice === "PAPER" || choice === "SCISSORS") {
         return choice;
     } else {
         //If user's input is invalid, ask user to try again
@@ -37,33 +32,80 @@ function getHumanChoice() {
     }
 }
 
-//Takes players' choices as input, updates players' scores, and returns a message declaring the result of the round
-function playRound(humanChoice, computerChoice) {
-    //Create string variable to store winner
+//Takes the string arguments for winner, user's choice, and computer's choice and returns the result message
+function getResultMessage(winner, humanChoice, computerChoice) {
+    //Create a string variable to store the result message
     let result = "";
 
-    if ((humanChoice === "rock" && computerChoice === "scissors")
-        || (humanChoice === "paper" && computerChoice === "rock")
-        || (humanChoice === "scissors" && computerChoice === "paper")) {
-        //If user picks the winning choice, increment user's score and assign message to declare user as the winner
-        humanScore += 1;
+    //Store the appropriate string to output the results
+    if (winner === "user") {
         result = `You win! ${humanChoice} beats ${computerChoice}.`;
-    } else if (humanChoice === computerChoice) {
-        //If user and computer picked the same choice, declare a tie
-        result = "It's a tie!";
-    } else {
-        //Computer wins if user does not - increment user's score, and assign message to declare user as the loser
-        computerScore += 1;
+    } else if (winner === "comp") {
         result = `You lose! ${computerChoice} beats ${humanChoice}.`;
+    } else if (winner === "tie") {
+        result = `It's a tie! You both chose ${computerChoice}.`;
     }
 
     return result;
 }
 
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
+//Takes the user's and computer's choice and returns the winner
+function playRound(humanChoice, computerChoice) {
 
-console.log(`Your Choice: ${humanSelection}`);
-console.log(`Computer's Choice: ${computerSelection}`);
+    if ((humanChoice === "ROCK" && computerChoice === "SCISSORS")
+        || (humanChoice === "PAPER" && computerChoice === "ROCK")
+        || (humanChoice === "SCISSORS" && computerChoice === "PAPER")) {
+        //If user picks the winning choice, return string "user"
+        return "user";
+    } else if (humanChoice === computerChoice) {
+        //If user and computer picked the same choice, return string "tie"
+        return "tie";
+    } else {
+        //Computer wins if user does not, return string "comp"
+        return "comp";
+    }
 
-console.log(playRound(humanSelection, computerSelection));
+}
+
+//Plays 5 rounds of rock, paper, scissors
+function playGame() {
+    //Create number variables to store user's score and computer's score
+    let humanScore = 0;
+    let computerScore = 0;
+
+    //Set up 5 rounds of rock, paper, scissors
+    for (let i = 1; i < 6; i++) {
+        //Create string variables to store the user and computer's choices
+        let humanChoice = getHumanChoice();
+        let computerChoice = getComputerChoice();
+
+        //Create string variable to store the winner
+        let winner = playRound(humanChoice, computerChoice);
+
+        //Increment the score for the winner
+        if (winner === "user") {
+            humanScore += 1;
+        } else if (winner === "comp") {
+            computerScore += 1;
+        } 
+
+        //Log the round's results
+        console.log(`Round ${i}: ${getResultMessage(winner, humanChoice, computerChoice)}`);
+    }
+
+    //Create a string variable to store the result of the overall game
+    let result = "Game over. "
+
+    //Store the appropriate string for the result
+    if (humanScore > computerScore) {
+        result += "You won!";
+    } else if (humanScore < computerScore) {
+        result += "You lost!";
+    } else if (humanScore == computerScore) {
+        result += "It's a tie!";
+    }
+
+    return result;
+}
+
+console.log(playGame());
