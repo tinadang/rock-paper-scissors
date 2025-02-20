@@ -6,106 +6,105 @@ function getComputerChoice() {
 
     if (randomNumber <= 0.33) {
         //If the random number is less than or equal to 0.33, choose rock
-        return "ROCK";
+        return "rock";
     } else if (randomNumber > 0.33 && randomNumber < 0.66) {
         //If the random number is between 0.33 and 0.66, choose paper
-        return "PAPER";
+        return "paper";
     } else if (randomNumber >= 0.66) {
         //If the random number is greater than or equal to 0.66, choose scissors
-        return "SCISSORS";
+        return "scissors";
     }
 
-}
+};
 
-//Prompts user to input their choice, checks validity, and returns it
-function getHumanChoice() {
-    //Create a string variable that stores the user's choice
-    let choice = prompt("Rock, paper, or scissors?").toUpperCase();
-
-    //If user inputs a valid choice, return it
-    if (choice === "ROCK" || choice === "PAPER" || choice === "SCISSORS") {
-        return choice;
-    } else {
-        //If user's input is invalid, ask user to try again
-        alert("Invalid choice. Pick rock, paper, or scissors.");
-        return getHumanChoice();
-    }
-}
-
-//Takes the string arguments for winner, user's choice, and computer's choice and returns the result message
+// //Takes the string arguments for winner, user's choice, and computer's choice and returns the result message
 function getResultMessage(winner, humanChoice, computerChoice) {
     //Create a string variable to store the result message
     let result = "";
 
     //Store the appropriate string to output the results
     if (winner === "user") {
-        result = `You win! ${humanChoice} beats ${computerChoice}.`;
-    } else if (winner === "comp") {
-        result = `You lose! ${computerChoice} beats ${humanChoice}.`;
+        result = `You win! ${humanChoice.toUpperCase()} beats ${computerChoice.toUpperCase()}.`;
+    } else if (winner === "computer") {
+        result = `You lose! ${computerChoice.toUpperCase()} beats ${humanChoice.toUpperCase()}.`;
     } else if (winner === "tie") {
-        result = `It's a tie! You both chose ${computerChoice}.`;
+        result = `It's a tie! You both chose ${computerChoice.toUpperCase()}.`;
     }
 
     return result;
-}
+};
 
-//Takes the user's and computer's choice and returns the winner
+function getGameWinnerMessage(humanScore, computerScore) {
+    let winnerMessage = `[Final Score] You: ${humanScore}, Computer: ${computerScore} || Game Over.`
+
+    if (humanScore > computerScore) {
+        winnerMessage += " You won!";
+    } else if (humanScore < computerScore) {
+        winnerMessage += " You lost!";
+    } else if (humanScore == computerScore) {
+        winnerMessage += " It's a tie!";
+    }
+
+    return winnerMessage;
+};
+
+//Takes the user's and computer's choice and returns a round result message
 function playRound(humanChoice, computerChoice) {
 
-    if ((humanChoice === "ROCK" && computerChoice === "SCISSORS")
-        || (humanChoice === "PAPER" && computerChoice === "ROCK")
-        || (humanChoice === "SCISSORS" && computerChoice === "PAPER")) {
-        //If user picks the winning choice, return string "user"
+    if ((humanChoice === "rock" && computerChoice === "scissors")
+        || (humanChoice === "paper" && computerChoice === "rock")
+        || (humanChoice === "scissors" && computerChoice === "paper")) {
         return "user";
     } else if (humanChoice === computerChoice) {
-        //If user and computer picked the same choice, return string "tie"
+
         return "tie";
     } else {
-        //Computer wins if user does not, return string "comp"
-        return "comp";
+        return "computer";
     }
 
+};
+
+//RPS UI
+
+const playerChoices = document.querySelectorAll("button");
+const body = document.querySelector("body");
+
+let userScore = 0;
+let computerScore = 0;
+let score = document.querySelector(".score");
+let gameResults = document.querySelector(".results");
+
+function playGame (humanChoice) {
+    let userChoice = humanChoice.target.className;
+    let computerChoice = getComputerChoice();
+    let winner = playRound(userChoice, computerChoice);
+
+    let resultMessage = document.createElement("li");
+    resultMessage.textContent = getResultMessage(winner, userChoice, computerChoice);
+    gameResults.appendChild(resultMessage);
+
+    switch (winner) {
+        case "user":
+            userScore++;
+            break;
+        case "computer":
+            computerScore++;
+            break;
+    }
+
+    score.textContent = `[Score] You: ${userScore} | Computer: ${computerScore}`;
 }
 
-//Plays 5 rounds of rock, paper, scissors
-function playGame() {
-    //Create number variables to store user's score and computer's score
-    let humanScore = 0;
-    let computerScore = 0;
+playerChoices.forEach((choice) => {
+    choice.addEventListener("mousedown", playGame);
+});
 
-    //Set up 5 rounds of rock, paper, scissors
-    for (let i = 1; i < 6; i++) {
-        //Create string variables to store the user and computer's choices
-        let humanChoice = getHumanChoice();
-        let computerChoice = getComputerChoice();
-
-        //Create string variable to store the winner
-        let winner = playRound(humanChoice, computerChoice);
-
-        //Increment the score for the winner
-        if (winner === "user") {
-            humanScore += 1;
-        } else if (winner === "comp") {
-            computerScore += 1;
-        } 
-
-        //Log the round's results
-        console.log(`Round ${i}: ${getResultMessage(winner, humanChoice, computerChoice)}`);
-    }
-
-    //Create a string variable to store the result of the overall game
-    let result = `You: ${humanScore} | Computer: ${computerScore} || Game over. `
-
-    //Store the appropriate string for the result
-    if (humanScore > computerScore) {
-        result += `You won!`;
-    } else if (humanScore < computerScore) {
-        result += "You lost!";
-    } else if (humanScore == computerScore) {
-        result += "It's a tie!";
-    }
-
-    return result;
-}
-
-console.log(playGame());
+playerChoices.forEach((choice) => {
+    choice.addEventListener("click", (choice) => {
+        if (userScore === 5 || computerScore === 5) {
+            playerChoices.forEach((choice) => choice.removeEventListener("mousedown", playGame));
+            score.textContent = getGameWinnerMessage(userScore, computerScore);
+        }
+    })
+    
+})
