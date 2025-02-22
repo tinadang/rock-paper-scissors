@@ -17,7 +17,7 @@ function getComputerChoice() {
 
 };
 
-// //Takes the string arguments for winner, user's choice, and computer's choice and returns the result message
+//Takes the string arguments for winner, user's choice, and computer's choice and returns the result message
 function getResultMessage(winner, humanChoice, computerChoice) {
     //Create a string variable to store the result message
     let result = "";
@@ -34,6 +34,7 @@ function getResultMessage(winner, humanChoice, computerChoice) {
     return result;
 };
 
+//Takes the user and computer's score and returns a message for the game winner
 function getGameWinnerMessage(humanScore, computerScore) {
     let winnerMessage = `[Final Score] You: ${humanScore}, Computer: ${computerScore} || Game Over.`
 
@@ -74,6 +75,21 @@ let computerScore = 0;
 let score = document.querySelector(".score");
 let gameResults = document.querySelector(".results");
 
+playerChoices.forEach((choice) => {
+    choice.addEventListener("mousedown", playGame);
+});
+
+//Game is over when one user gets 5 points
+playerChoices.forEach((choice) => {
+    choice.addEventListener("click", (choice) => {
+        if (userScore === 5 || computerScore === 5) {
+            playerChoices.forEach((choice) => choice.removeEventListener("mousedown", playGame));
+            score.textContent = getGameWinnerMessage(userScore, computerScore);
+        }
+    })
+    
+});
+
 function playGame (humanChoice) {
     let userChoice = humanChoice.target.className;
     let computerChoice = getComputerChoice();
@@ -94,17 +110,3 @@ function playGame (humanChoice) {
 
     score.textContent = `[Score] You: ${userScore} | Computer: ${computerScore}`;
 }
-
-playerChoices.forEach((choice) => {
-    choice.addEventListener("mousedown", playGame);
-});
-
-playerChoices.forEach((choice) => {
-    choice.addEventListener("click", (choice) => {
-        if (userScore === 5 || computerScore === 5) {
-            playerChoices.forEach((choice) => choice.removeEventListener("mousedown", playGame));
-            score.textContent = getGameWinnerMessage(userScore, computerScore);
-        }
-    })
-    
-})
